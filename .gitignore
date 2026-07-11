@@ -6,8 +6,6 @@ __pycache__/
 *.so
 *.egg-info/
 *.egg
-dist/
-build/
 .eggs/
 
 # Virtual environments
@@ -29,11 +27,7 @@ Thumbs.db
 
 # Project specific
 *.bak
-*.slxc
 *.slx.autosave
-log/
-simulation/
-*.log
 
 # Settings with secrets
 motorai_settings.json
