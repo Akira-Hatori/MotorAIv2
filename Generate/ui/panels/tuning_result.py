@@ -96,8 +96,9 @@ class TuningResultPanel(QWidget):
         score_value_row.addStretch()
         score_text_layout.addLayout(score_value_row)
         score_layout.addLayout(score_text_layout, 1)
-        self.status_badge = QLabel('等待结果')
+        self.status_badge = QLabel()
         self.status_badge.setAlignment(Qt.AlignCenter)
+        self.status_badge.hide()
         score_layout.addWidget(self.status_badge, 0, Qt.AlignTop)
         result_layout.addWidget(self.score_card)
 
@@ -424,6 +425,11 @@ class TuningResultPanel(QWidget):
             f'font-size:11px;font-weight:600;color:{color};background:{background};'
             f'border:1px solid {border};border-radius:9px;padding:3px 8px;'
         )
+        self.status_badge.show()
+
+    def _hide_status_badge(self):
+        self.status_badge.clear()
+        self.status_badge.hide()
 
     @staticmethod
     def _display_status(value):
@@ -494,13 +500,13 @@ class TuningResultPanel(QWidget):
         satisfied = details.get('requirement_satisfied')
         normalized_status = str(status_text or '')
         if '失败' in normalized_status or '异常' in normalized_status:
-            self._set_status_badge('处理异常', 'error')
+            self._hide_status_badge()
         elif satisfied is True:
             self._set_status_badge('满足需求', 'success')
         elif score_value is None:
-            self._set_status_badge('等待结果')
+            self._hide_status_badge()
         elif '正在翻译' in normalized_status:
-            self._set_status_badge('整理结果')
+            self._hide_status_badge()
         elif satisfied is False:
             self._set_status_badge('继续调优')
         else:

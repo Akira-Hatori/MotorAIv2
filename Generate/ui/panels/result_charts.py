@@ -34,19 +34,11 @@ matplotlib.use("Qt5Agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+from styles.fonts import configure_matplotlib_fonts
 from styles.theme import current_theme
 
 # ── 中文字体配置 ──────────────────────────────────────────────────────
-import matplotlib.font_manager as fm
-
-_CHINESE_FONTS = [
-    "Microsoft YaHei", "SimHei", "Noto Sans CJK SC",
-    "WenQuanYi Micro Hei", "Arial Unicode MS", "sans-serif",
-]
-_available = {f.name for f in fm.fontManager.ttflist}
-_selected = next((fn for fn in _CHINESE_FONTS if fn in _available), "sans-serif")
-matplotlib.rcParams["font.family"] = _selected
-matplotlib.rcParams["axes.unicode_minus"] = False
+configure_matplotlib_fonts(matplotlib)
 
 # ── 候选方案配色 ──────────────────────────────────────────────────────
 CANDIDATE_COLORS: dict[str, str] = {

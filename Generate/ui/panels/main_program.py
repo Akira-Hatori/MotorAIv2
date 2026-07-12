@@ -55,7 +55,6 @@ from Competition.competition_workspace import (
 WELCOME_GIF_SIZE = 50
 INPUT_CARD_RADIUS = 16
 WELCOME_INPUT_MAX_WIDTH = 1020
-CHAT_INPUT_MAX_WIDTH = 1020
 
 
 def _build_tuning_policy_from_loops(selected_loops):
@@ -504,9 +503,11 @@ class MainProgramPanel(QWidget):
         self.input_dock.setAttribute(Qt.WA_StyledBackground, True)
         self.input_dock.setStyleSheet('QWidget#floatingInputDock{background:transparent;border:none;}')
         input_dock_layout = QHBoxLayout(self.input_dock)
-        input_dock_layout.setContentsMargins(0, 4, 0, 10)
+        # Keep the composer aligned with the chat content at every window
+        # width. The previous centered 1020 px cap left large empty gutters on
+        # 2K displays even though the conversation viewport kept expanding.
+        input_dock_layout.setContentsMargins(24, 4, 24, 10)
         input_dock_layout.setSpacing(0)
-        input_dock_layout.addStretch(1)
 
         self.input_row = QFrame()
         self.input_row.setObjectName('floatingInputCard')
@@ -550,8 +551,7 @@ class MainProgramPanel(QWidget):
 
         input_layout.addWidget(self.input_edit, 1)
         input_layout.addWidget(input_actions)
-        input_dock_layout.addWidget(self.input_row, 0, Qt.AlignCenter)
-        input_dock_layout.addStretch(1)
+        input_dock_layout.addWidget(self.input_row, 1)
 
         self.action_row = QWidget()
         action_layout = QHBoxLayout(self.action_row)
@@ -678,12 +678,9 @@ class MainProgramPanel(QWidget):
     def _sync_input_widths(self):
         available = max(320, self.width())
         welcome_width = min(WELCOME_INPUT_MAX_WIDTH, available)
-        chat_width = min(CHAT_INPUT_MAX_WIDTH, available)
 
         if hasattr(self, 'welcome_input_shell'):
             self.welcome_input_shell.setFixedWidth(welcome_width)
-        if hasattr(self, 'input_row'):
-            self.input_row.setFixedWidth(chat_width)
 
     def show_welcome_overlay(self):
         while self.main_layout.count():
